@@ -1,23 +1,9 @@
-// aiRecommender.js - OpenAI para recomendaciones
-// services/aiRecommender.js
+import { CONFIG } from '../config.js';
 
-export async function obtenerRecomendacionesAI(destino, perfil, presupuesto) {
-	const prompt = `Recomienda actividades en ${destino} para perfil ${perfil} con presupuesto ${presupuesto}.`;
-
-	const response = await fetch('https://magicloops.dev/api/loop/8a201ddc-49e3-4b04-ad85-0bfb97a04d8f/run', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({ input: prompt })
-	});
-
-	if (!response.ok) {
-		const errorText = await response.text();
-		throw new Error('Error al obtener respuesta de la IA: ' + errorText);
-	}
-
-	const data = await response.json();
-	return data;
+export async function obtenerRecomendacionesAI(presupuesto, dias, viajeros, interes) {
+  const input = { budget: presupuesto, duration: dias, people: viajeros, interest: interes };
+  const url = `${CONFIG.MAGICLOOPS_URL}?input=${encodeURIComponent(JSON.stringify(input))}`;
+  const res = await fetch(url);
+  const datos = await res.json();
+  return datos.ciudades || [];
 }
-

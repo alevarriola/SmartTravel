@@ -1,53 +1,47 @@
-// main.js - Lógica principal de Smart Travel Planner
+    import { obtenerRecomendacionesAI } from './services/aiRecommender.js';
+    import { getPlaces } from './services/placesAPI.js';
+    import { obtenerClima } from './services/weatherAPI.js';
+    import { renderResultsCard } from './components/resultsCard.js';
+    import { renderActivityList } from './components/activityList.js';
 
-import { renderSearchForm } from './components/searchForm.js';
-import { renderResultsCard } from './components/resultsCard.js';
-import { renderMapView } from './components/mapView.js';
-import { renderWeatherWidget } from './components/weatherWidget.js';
-import { getPlaces } from './services/placesAPI.js';
-import { renderActivityList } from './components/activityList.js';
-import { obtenerRecomendacionesAI } from './services/aiRecommender.js';
+    // Actualizar valor mostrado del slider presupuesto
+    document.getElementById('presupuesto').addEventListener('input', e => {
+    document.getElementById('presupuesto-valor').textContent = e.target.value;
+    });
 
-// Escucha el evento personalizado del formulario
-document.addEventListener('travel-search', async (event) => {
-    const datos = event.detail;
-    const destino = datos.destino || 'México';
-    const dias = datos.dias;
-    const viajeros = datos.viajeros;
-    const presupuesto = datos.presupuesto;
-    const intereses = datos.intereses;
+    document.getElementById('buscar').addEventListener('click', async () => {
+    // Obtener valores de inputs, presupuesto convertido a entero
+    const presupuesto = parseInt(document.getElementById('presupuesto').value, 10);
+    const dias = parseInt(document.getElementById('dias').value, 10);
+    const viajeros = parseInt(document.getElementById('viajeros').value, 10);
+    const interes = document.getElementById('interes').value;
 
-    document.getElementById('estado-cargando').classList.remove('hidden');
+    // Validar inputs mínimos (opcional)
+    if (isNaN(presupuesto) || presupuesto < 500) {
+        alert('Por favor ingresa un presupuesto válido (mínimo 500).');
+        return;
+    }
 
     try {
-        const lugares = await getPlaces({ near: destino, limit: 8 });
+        // Pedir recomendaciones AI
+        const recomendaciones = await obtenerRecomendacionesAI(presupuesto, dias, viajeros, interes);
 
-        let actividadesContainer = document.getElementById('lista-actividades');
-        if (!actividadesContainer) {
-            actividadesContainer = document.createElement('div');
-            actividadesContainer.id = 'lista-actividades';
-            document.getElementById('seccion-resultados').prepend(actividadesContainer);
-        }
-        renderActivityList(lugares, actividadesContainer);
-
-        const respuesta = await obtenerRecomendacionesAI(destino, intereses.join(', '), presupuesto);
-
-        if (Array.isArray(respuesta)) {
-            renderResultsCard(respuesta);
-        } else {
-            renderResultsCard([respuesta]);
+        if (!recomendaciones.length) {
+        alert('No se encontraron destinos para esos parámetros.');
+        return;
         }
 
-        document.getElementById('estado-cargando').classList.add('hidden');
-        document.getElementById('seccion-resultados').classList.remove('hidden');
+        // Renderizar las tarjetas de resultados
+        await renderResultsCard(recomendaciones);
+
+        // Obtener y mostrar lugares sugeridos para la primera ciudad recomendada
+        const ciudad = recomendaciones[0].ciudad;
+        const lugares = await getPlaces({ near: ciudad });
+        renderActivityList(lugares, document.getElementById('lista-actividades'));
+
+        // Mostrar sección de resultados si estaba oculta
+        document.getElementById('resultados').classList.remove('hidden');
     } catch (error) {
-        alert('Error al buscar lugares: ' + error.message);
-        document.getElementById('estado-cargando').classList.add('hidden');
+        alert('Error al buscar recomendaciones: ' + error.message);
     }
-});
-
-// Inicializa el formulario (si tienes lógica de renderizado)
-renderSearchForm();
-
-
-
+    });

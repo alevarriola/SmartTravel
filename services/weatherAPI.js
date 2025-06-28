@@ -1,24 +1,11 @@
-// weatherAPI.js - OpenWeatherMap
+import { CONFIG } from '../config.js';
 
-
-
-
-
-// mini Pseudo
-
-    // Para tres posibles destinos
-
-// Pronostico del lugar de destino 
-    //1. pedimos el pronostico por 5 dias
-        // Devuelve 40 bloques (8 por día)
-        // agrupar por día
-            // promediar y guardar para 1 solo destino. solo del 1 primer dia.
-
-
-
-
-export async function getWeather(location) {
-    // Lógica para consultar clima
-    // Placeholder: return {};
-    return {};
+export async function obtenerClima(ciudad) {
+  const url = `https://api.openweathermap.org/data/2.5/forecast?q=${ciudad}&units=metric&appid=${CONFIG.OPENWEATHERMAP_API_KEY}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  const today = data.list.slice(0, 8);
+  const temp = (today.reduce((sum, e) => sum + e.main.temp, 0) / today.length).toFixed(1);
+  const clima = today[0].weather[0].main;
+  return { ciudad, temperatura: temp, clima };
 }
