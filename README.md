@@ -36,8 +36,7 @@ Proyecto web para planificar viajes inteligentes usando APIs en tiempo real y re
 
 ## Dependencias
 - [Tailwind CSS](https://tailwindcss.com/) vía CDN
-- [Leaflet](https://leafletjs.com/) para mapas
-- APIs: Amadeus, Skyscanner, OpenWeatherMap, Foursquare, OpenAI, REST Countries, GeoNames
+- APIs: Amadeus, OpenWeatherMap, Foursquare, MagigLoop
 
 ## Licencia
 MIT
