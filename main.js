@@ -8,35 +8,36 @@ import { getPlaces } from './services/placesAPI.js';
 import { renderActivityList } from './components/activityList.js';
 import { obtenerRecomendacionesAI } from './services/aiRecommender.js';
 
+// Escucha el evento personalizado del formulario
+document.addEventListener('travel-search', async (event) => {
+    const datos = event.detail;
+    const destino = datos.destino || 'México';
+    const dias = datos.dias;
+    const viajeros = datos.viajeros;
+    const presupuesto = datos.presupuesto;
+    const intereses = datos.intereses;
 
-document.getElementById('boton-buscar').addEventListener('click', async () => {
-    // Ejemplo: el destino se obtiene de un input o select (ajusta según tu UI)
-    const destino = document.getElementById('seleccionar-dias').value; // Cambia esto por el campo correcto
-    const perfil = document.getElementById('perfil').value;
-	const presupuesto = document.getElementById('presupuesto').value;
-
-    // Mostrar cargando
     document.getElementById('estado-cargando').classList.remove('hidden');
 
     try {
-        // 1. Obtener lugares de interés con Foursquare
-        const places = await getPlaces({ near: destino, limit: 8 });
+        const lugares = await getPlaces({ near: destino, limit: 8 });
 
-        // 2. Renderizar lugares en la UI
-        const actividadesContainer = document.createElement('div');
-        actividadesContainer.id = 'lista-actividades';
-        document.getElementById('seccion-resultados').prepend(actividadesContainer);
-        renderActivityList(places, actividadesContainer);
+        let actividadesContainer = document.getElementById('lista-actividades');
+        if (!actividadesContainer) {
+            actividadesContainer = document.createElement('div');
+            actividadesContainer.id = 'lista-actividades';
+            document.getElementById('seccion-resultados').prepend(actividadesContainer);
+        }
+        renderActivityList(lugares, actividadesContainer);
 
-		const respuesta = await obtenerRecomendacionesAI(destino, perfil, presupuesto);
+        const respuesta = await obtenerRecomendacionesAI(destino, intereses.join(', '), presupuesto);
 
-        // Si Magic Loops devuelve 1 sola:
-        renderResultsCard([respuesta]);
+        if (Array.isArray(respuesta)) {
+            renderResultsCard(respuesta);
+        } else {
+            renderResultsCard([respuesta]);
+        }
 
-        // Si devuelve varias:
-        // renderResultsCard(respuesta);
-		
-        // Ocultar cargando y mostrar resultados
         document.getElementById('estado-cargando').classList.add('hidden');
         document.getElementById('seccion-resultados').classList.remove('hidden');
     } catch (error) {
@@ -44,6 +45,9 @@ document.getElementById('boton-buscar').addEventListener('click', async () => {
         document.getElementById('estado-cargando').classList.add('hidden');
     }
 });
+
+// Inicializa el formulario (si tienes lógica de renderizado)
+renderSearchForm();
 
 
 
