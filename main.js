@@ -13,7 +13,7 @@ document.getElementById('boton-buscar').addEventListener('click', async () => {
     // Ejemplo: el destino se obtiene de un input o select (ajusta según tu UI)
     const destino = document.getElementById('seleccionar-dias').value; // Cambia esto por el campo correcto
     const perfil = document.getElementById('perfil').value;
-	const presupuesto = document.getElementById('presupuesto').value;
+	  const presupuesto = document.getElementById('presupuesto').value;
 
     // Mostrar cargando
     document.getElementById('estado-cargando').classList.remove('hidden');
@@ -44,6 +44,3 @@ document.getElementById('boton-buscar').addEventListener('click', async () => {
         document.getElementById('estado-cargando').classList.add('hidden');
     }
 });
-
-
-
