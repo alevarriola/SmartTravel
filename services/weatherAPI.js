@@ -18,7 +18,7 @@ import { CONFIG } from '../config';
 
 
 
-APIKEY = CONFIG.OPENWEATHERMAP_API_KEY;
+const API_KEY = CONFIG.OPENWEATHERMAP_API_KEY;
 
 
 export async function getWeather(ubicacion) {
