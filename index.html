@@ -38,7 +38,10 @@
     </head>
     <body class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
 
-    <header class="glassmorphism shadow-sm border-b sticky top-0 z-40">
+    <header class="glassmorphism shadow-sm border-b sticky top-0 z-40 relative">
+    <button id="boton-modo-oscuro" class="absolute top-4 left-4 bg-gray-900 text-white rounded-full p-2 shadow-md hover:bg-gray-800 transition-colors duration-200" title="Modo oscuro">
+        <svg id="icono-modo" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-13.66l-.71.71M4.05 19.07l-.71.71M21 12h-1M4 12H3m16.66 5.66l-.71-.71M4.05 4.93l-.71-.71M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+    </button>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         <div class="flex items-center space-x-2">
         <i data-lucide="plane" class="h-8 w-8 text-blue-600"></i>
@@ -245,5 +248,78 @@
         });
     </script>
     <script type="module" src="main.js"></script>
+    <script>
+    // Modo oscuro
+    const darkClass = 'dark';
+    const body = document.body;
+    const main = document.querySelector('main');
+    const header = document.querySelector('header');
+    const footer = document.querySelector('footer');
+    const darkBtn = document.getElementById('boton-modo-oscuro');
+    const iconoModo = document.getElementById('icono-modo');
+    darkBtn.addEventListener('click', () => {
+        body.classList.toggle(darkClass);
+        // Fondo general
+        if (body.classList.contains(darkClass)) {
+            body.style.background = '#18181b';
+            body.style.color = '#fff';
+            main.classList.add('bg-gray-900', 'text-white');
+            header.classList.add('bg-gray-900', 'text-white');
+            footer.classList.add('bg-gray-900', 'text-white');
+            // Secciones principales
+            document.querySelectorAll('.glassmorphism').forEach(el => {
+                el.style.background = 'rgba(24,24,27,0.95)';
+                el.style.color = '#fff';
+                el.style.borderColor = 'rgba(255,255,255,0.08)';
+            });
+            // Títulos
+            document.querySelectorAll('h1,h2,h3,h4,h5').forEach(el => {
+                el.style.color = '#fff';
+            });
+            // Inputs, selects, labels
+            document.querySelectorAll('input,select,textarea').forEach(el => {
+                el.classList.add('bg-gray-800','text-white','border-gray-700');
+            });
+            document.querySelectorAll('label').forEach(el => {
+                el.style.color = '#fff';
+            });
+            // Cards de resultados
+            document.querySelectorAll('.destination-card').forEach(el => {
+                el.style.background = 'rgba(24,24,27,0.95)';
+                el.style.color = '#fff';
+            });
+        } else {
+            body.style.background = '';
+            body.style.color = '';
+            main.classList.remove('bg-gray-900', 'text-white');
+            header.classList.remove('bg-gray-900', 'text-white');
+            footer.classList.remove('bg-gray-900', 'text-white');
+            document.querySelectorAll('.glassmorphism').forEach(el => {
+                el.style.background = 'rgba(255,255,255,0.9)';
+                el.style.color = '';
+                el.style.borderColor = 'rgba(255,255,255,0.2)';
+            });
+            document.querySelectorAll('h1,h2,h3,h4,h5').forEach(el => {
+                el.style.color = '';
+            });
+            document.querySelectorAll('input,select,textarea').forEach(el => {
+                el.classList.remove('bg-gray-800','text-white','border-gray-700');
+            });
+            document.querySelectorAll('label').forEach(el => {
+                el.style.color = '';
+            });
+            document.querySelectorAll('.destination-card').forEach(el => {
+                el.style.background = 'rgba(255,255,255,0.9)';
+                el.style.color = '';
+            });
+        }
+        // Cambia el icono (sol/luna)
+        if (body.classList.contains(darkClass)) {
+            iconoModo.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z" />';
+        } else {
+            iconoModo.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-13.66l-.71.71M4.05 19.07l-.71.71M21 12h-1M4 12H3m16.66 5.66l-.71-.71M4.05 4.93l-.71-.71M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
+        }
+    });
+    </script>
 </body>
 </html>
