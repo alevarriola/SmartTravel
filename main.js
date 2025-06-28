@@ -30,11 +30,11 @@ document.getElementById('boton-buscar').addEventListener('click', async () => {
 
 		const respuesta = await obtenerRecomendacionesAI(destino, perfil, presupuesto);
 
-		// Si Magic Loops devuelve 1 sola:
-		renderizarResultados([respuesta]);
+        // Si Magic Loops devuelve 1 sola:
+        renderResultsCard([respuesta]);
 
-		// Si devuelve varias:
-		// renderizarResultados(respuesta);
+        // Si devuelve varias:
+        // renderResultsCard(respuesta);
 		
         // Ocultar cargando y mostrar resultados
         document.getElementById('estado-cargando').classList.add('hidden');
