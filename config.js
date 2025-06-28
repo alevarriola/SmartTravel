@@ -1,3 +1,13 @@
 // config.js - API Keys y URLs base
+<<<<<<< Updated upstream
 // config.js
 
+=======
+export const CONFIG = {
+    AMADEUS_API_KEY: 'TU_API_KEY',
+    SKYSCANNER_API_KEY: 'TU_API_KEY',
+    OPENWEATHERMAP_API_KEY: 'ba0557a79612e359c70ad69cdfc590fe',
+    FOURSQUARE_API_KEY: 'fsq3ZAOSnsJlBt6q1yVP9o0YUtJ8i3c5aWM5AviJ5nlIZ4o=',
+    OPENAI_API_KEY: 'TU_API_KEY',
+};
+>>>>>>> Stashed changes
